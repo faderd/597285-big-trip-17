@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Andrey Sviridyuk](https://up.htmlacademy.ru/ecmascript/17/user/597285).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Якушкин](https://htmlacademy.ru/profile/id126208).
 
 ---
 
