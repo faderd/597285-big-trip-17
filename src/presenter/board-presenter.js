@@ -14,12 +14,14 @@ export default class BoardPresenter {
     this.boardPoints = [...this.pointsModel.getPoints()];
     this.offers = this.pointsModel.getOffers();
 
+    const [firstPoint, ...otherPoints] = this.boardPoints;
+
     render(this.boardListComponent, this.boardContainer);
 
-    render(new EditPointView(this.boardPoints[0], this.offers), this.boardListComponent.getElement());
+    render(new EditPointView(firstPoint, this.offers), this.boardListComponent.getElement());
 
-    for (let i = 1; i < this.boardPoints.length; i++) {
-      render(new PointView(this.boardPoints[i], this.offers), this.boardListComponent.getElement());
-    }
+    otherPoints.forEach((point) => {
+      render(new PointView(point, this.offers), this.boardListComponent.getElement());
+    });
   };
 }

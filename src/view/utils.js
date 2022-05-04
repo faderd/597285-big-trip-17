@@ -9,17 +9,15 @@ const getTimeDifference = (dateFrom, dateTo) => {
   const date2 = dayjs(dateTo);
   const diffTime = dayjs.duration(date2.diff(date1));
 
-  if (diffTime.format('H') < 1) {
+  if (diffTime.hours() < 1) {
     return diffTime.format('mm[M]');
   }
 
-  if (diffTime.format('H') < 24) {
+  if (diffTime.days() < 1) {
     return diffTime.format('HH[H] mm[M]');
   }
 
-  if (diffTime.format('H') >= 24) {
-    return diffTime.format('DD[D] HH[H] mm[M]');
-  }
+  return diffTime.format('DD[D] HH[H] mm[M]');
 };
 
 const getRandomInteger = (a = 0, b = 1) => {
