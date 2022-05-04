@@ -8,16 +8,18 @@ import EditPointView from '../view/edit-point-view.js';
 export default class BoardPresenter {
   boardListComponent = new BoardView();
 
-  init = (boardContainer) => {
+  init = (boardContainer, pointsModel) => {
     this.boardContainer = boardContainer;
+    this.pointsModel = pointsModel;
+    this.boardPoints = [...this.pointsModel.getPoints()];
+    this.offers = this.pointsModel.getOffers();
 
     render(this.boardListComponent, this.boardContainer);
 
-    render(new EditPointView(), this.boardListComponent.getElement());
+    render(new EditPointView(this.boardPoints[0], this.offers), this.boardListComponent.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new PointView(), this.boardListComponent.getElement());
+    for (let i = 1; i < this.boardPoints.length; i++) {
+      render(new PointView(this.boardPoints[i], this.offers), this.boardListComponent.getElement());
     }
-
   };
 }
