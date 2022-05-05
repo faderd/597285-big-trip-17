@@ -4,6 +4,7 @@ import {
 import BoardView from '../view/board-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
+import { isEscapeKey } from '../view/utils.js';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -13,20 +14,51 @@ export default class BoardPresenter {
 
   #boardListComponent = new BoardView();
 
+  #renderPoint = (point) => {
+    const pointComponent = new PointView(point, this.#offers);
+
+    const pointEditComponent = new EditPointView(point, this.#offers);
+
+    const replaceLineToForm = () => {
+      this.#boardListComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToLine = () => {
+      this.#boardListComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
+    };
+
+    const escapeKeyDownHandler = (evt) => {
+      if (isEscapeKey(evt)) {
+        evt.preventDefault();
+        replaceFormToLine();
+        document.removeEventListener('keydown', escapeKeyDownHandler);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceLineToForm();
+      document.addEventListener('keydown', escapeKeyDownHandler);
+    });
+
+    pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToLine();
+      document.removeEventListener('keydown', escapeKeyDownHandler);
+    });
+
+    render(pointComponent, this.#boardListComponent.element);
+  };
+
   init = (boardContainer, pointsModel) => {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#boardPoints = [...this.#pointsModel.points];
     this.#offers = this.#pointsModel.offers;
 
-    const [firstPoint, ...otherPoints] = this.#boardPoints;
-
     render(this.#boardListComponent, this.#boardContainer);
 
-    render(new EditPointView(firstPoint, this.#offers), this.#boardListComponent.element);
-
-    otherPoints.forEach((point) => {
-      render(new PointView(point, this.#offers), this.#boardListComponent.element);
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
     });
   };
 }
