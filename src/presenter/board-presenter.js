@@ -14,6 +14,11 @@ export default class BoardPresenter {
 
   #boardListComponent = new BoardView();
 
+  constructor(boardContainer, pointsModel) {
+    this.#boardContainer = boardContainer;
+    this.#pointsModel = pointsModel;
+  }
+
   #renderPoint = (point) => {
     const pointComponent = new PointView(point, this.#offers);
 
@@ -49,12 +54,14 @@ export default class BoardPresenter {
     render(pointComponent, this.#boardListComponent.element);
   };
 
-  init = (boardContainer, pointsModel) => {
-    this.#boardContainer = boardContainer;
-    this.#pointsModel = pointsModel;
+  init = () => {
     this.#boardPoints = [...this.#pointsModel.points];
     this.#offers = this.#pointsModel.offers;
 
+    this.#renderBoard();
+  };
+
+  #renderBoard = () => {
     render(this.#boardListComponent, this.#boardContainer);
 
     this.#boardPoints.forEach((point) => {
