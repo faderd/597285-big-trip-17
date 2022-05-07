@@ -1,10 +1,16 @@
 import {
   render,
+  RenderPosition,
 } from '../render.js';
 import BoardView from '../view/board-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { isEscapeKey } from '../view/utils.js';
+import ListEmptyView from '../view/list-empty-view.js';
+import SortView from '../view/sort-view.js';
+import TripInfoView from '../view/trip-info-view.js';
+
+const siteTripHeaderElement = document.querySelector('.trip-main');
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -63,6 +69,14 @@ export default class BoardPresenter {
 
   #renderBoard = () => {
     render(this.#boardListComponent, this.#boardContainer);
+
+    if (this.#boardPoints.length === 0) {
+      render(new ListEmptyView('Past'), this.#boardListComponent.element);
+      return;
+    }
+
+    render(new TripInfoView(), siteTripHeaderElement, RenderPosition.AFTERBEGIN);
+    render(new SortView(), this.#boardContainer, RenderPosition.AFTERBEGIN);
 
     this.#boardPoints.forEach((point) => {
       this.#renderPoint(point);
