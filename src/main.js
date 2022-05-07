@@ -12,10 +12,10 @@ const siteTripHeaderElement = document.querySelector('.trip-main');
 const siteFilterElement = document.querySelector('.trip-controls__filters');
 const siteTripEventsElement = document.querySelector('.trip-events');
 const pointsModel = new PointsModel();
-const boardPresenter = new BoardPresenter();
+const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel);
 
 render(new TripInfoView(), siteTripHeaderElement, RenderPosition.AFTERBEGIN);
 render(new FilterView(), siteFilterElement);
 render(new SortView(), siteTripEventsElement);
 
-boardPresenter.init(siteTripEventsElement, pointsModel);
+boardPresenter.init();

@@ -43,6 +43,8 @@ const getRandomUniqueArray = (array) => {
 
 const formatDate = (date, formatString) => dayjs(date).format(formatString);
 
+const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
 export {
   getTimeFromDate,
   getTimeDifference,
@@ -50,4 +52,5 @@ export {
   getRandomInteger,
   getRandomUniqueArray,
   formatDate,
+  isEscapeKey,
 };
