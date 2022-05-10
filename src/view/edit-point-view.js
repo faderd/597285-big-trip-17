@@ -1,11 +1,9 @@
 const DATE_FORMAT = 'YY/MM/DD HH:mm';
 
-import {
-  createElement,
-} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {
   formatDate,
-} from './utils.js';
+} from '../utils/point.js';
 
 const createOffersTemplate = (offersIds, type, gettedOffers) => {
   const currentOffers = gettedOffers.find((obj) => obj.type === type);
@@ -151,27 +149,27 @@ const createEditPointTemplate = (point = {}, gettedOffers) => {
   </li>`);
 };
 
-export default class EditPointView {
-  #element = null;
+export default class EditPointView extends AbstractView{
+  #point = null;
+  #gettedOffers = null;
 
   constructor(point, gettedOffers) {
-    this.point = point;
-    this.gettedOffers = gettedOffers;
+    super();
+    this.#point = point;
+    this.#gettedOffers = gettedOffers;
   }
 
   get template() {
-    return createEditPointTemplate(this.point, this.gettedOffers);
+    return createEditPointTemplate(this.#point, this.#gettedOffers);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }

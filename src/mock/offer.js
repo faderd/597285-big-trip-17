@@ -3,7 +3,7 @@ const OfferPriceRange = {
   MAX: 50,
 };
 
-import { getRandomInteger } from '../view/utils.js';
+import { getRandomInteger } from '../utils/common.js';
 
 export const generateOffers = () => [
   {

@@ -11,7 +11,7 @@ import {
 import {
   getRandomInteger,
   getRandomUniqueArray,
-} from '../view/utils.js';
+} from '../utils/common.js';
 
 const getRandomType = () => TYPES[getRandomInteger(0, TYPES.length - 1)];
 const getRandomCity = () => {

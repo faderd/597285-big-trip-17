@@ -1,5 +1,5 @@
 import { ListEmptyMessages, } from '../const.js';
-import { createElement, } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createListEmptyTemplate = (filterValue) => {
   const message = ListEmptyMessages[filterValue.toUpperCase()];
@@ -8,26 +8,15 @@ const createListEmptyTemplate = (filterValue) => {
   );
 };
 
-export default class ListEmptyView {
-  #element = null;
+export default class ListEmptyView extends AbstractView {
+  #filterValue = null;
 
   constructor(filterValue) {
-    this.filterValue = filterValue;
+    super();
+    this.#filterValue = filterValue;
   }
 
   get template() {
-    return createListEmptyTemplate(this.filterValue);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createListEmptyTemplate(this.#filterValue);
   }
 }

@@ -1,11 +1,12 @@
 import {
   render,
   RenderPosition,
-} from '../render.js';
+  replace,
+} from '../framework/render.js';
 import BoardView from '../view/board-view.js';
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
-import { isEscapeKey } from '../view/utils.js';
+import { isEscapeKey } from '../utils/common.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
@@ -31,11 +32,11 @@ export default class BoardPresenter {
     const pointEditComponent = new EditPointView(point, this.#offers);
 
     const replaceLineToForm = () => {
-      this.#boardListComponent.element.replaceChild(pointEditComponent.element, pointComponent.element);
+      replace(pointEditComponent, pointComponent);
     };
 
     const replaceFormToLine = () => {
-      this.#boardListComponent.element.replaceChild(pointComponent.element, pointEditComponent.element);
+      replace(pointComponent, pointEditComponent);
     };
 
     const escapeKeyDownHandler = (evt) => {
@@ -46,13 +47,12 @@ export default class BoardPresenter {
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replaceLineToForm();
       document.addEventListener('keydown', escapeKeyDownHandler);
     });
 
-    pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointEditComponent.setFormSubmitHandler(() => {
       replaceFormToLine();
       document.removeEventListener('keydown', escapeKeyDownHandler);
     });
