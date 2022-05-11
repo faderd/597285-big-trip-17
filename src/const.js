@@ -6,7 +6,14 @@ const ListEmptyMessages = {
   FUTURE: 'There are no future events now',
 };
 
+const FilterTypes = {
+  EVERYTHING: 'everything',
+  PAST: 'past',
+  FUTURE: 'future',
+};
+
 export {
   TYPES,
   ListEmptyMessages,
+  FilterTypes,
 };

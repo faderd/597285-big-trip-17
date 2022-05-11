@@ -24,9 +24,12 @@ const humanizePointDate = (date) => dayjs(date).format('MMM DD');
 
 const formatDate = (date, formatString) => dayjs(date).format(formatString);
 
+const getCurrentDate = () => dayjs().format('YYYY-MM-DD');
+
 export {
   getTimeFromDate,
   getTimeDifference,
   humanizePointDate,
   formatDate,
+  getCurrentDate,
 };
