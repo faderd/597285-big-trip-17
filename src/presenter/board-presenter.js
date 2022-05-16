@@ -1,15 +1,13 @@
 import {
   render,
   RenderPosition,
-  replace,
 } from '../framework/render.js';
+import { updateItem } from '../utils/common.js';
 import BoardView from '../view/board-view.js';
-import PointView from '../view/point-view.js';
-import EditPointView from '../view/edit-point-view.js';
-import { isEscapeKey } from '../utils/common.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
+import PointPresenter from './point-presenter.js';
 
 const siteTripHeaderElement = document.querySelector('.trip-main');
 
@@ -20,44 +18,69 @@ export default class BoardPresenter {
   #offers = [];
 
   #boardListComponent = new BoardView();
+  #sortComponent = new SortView();
+  #tripInfoComponent = new TripInfoView();
+  #pointsPresenters = new Map();
 
   constructor(boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
   }
 
+  #handlePointChange = (updatedPoint) => {
+    const currentOffers = this.#offers.find((obj) => obj.type === updatedPoint.type);
+
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint, currentOffers);
+  };
+
+  #handleModeChange = () => {
+    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #renderTripInfo = () => {
+    render(this.#tripInfoComponent, siteTripHeaderElement, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderSort = () => {
+    render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderPoint = (point) => {
-    const pointComponent = new PointView(point, this.#offers);
+    const pointPresenter = new PointPresenter(this.#boardListComponent.element, this.#handlePointChange, this.#handleModeChange);
+    const currentOffers = this.#offers.find((obj) => obj.type === point.type);
 
-    const pointEditComponent = new EditPointView(point, this.#offers);
+    pointPresenter.init(point, currentOffers);
+    this.#pointsPresenters.set(point.id, pointPresenter);
+  };
 
-    const replaceLineToForm = () => {
-      replace(pointEditComponent, pointComponent);
-    };
+  #renderNoPoints = (filterValue) => {
+    render(new ListEmptyView(filterValue), this.#boardListComponent.element);
+  };
 
-    const replaceFormToLine = () => {
-      replace(pointComponent, pointEditComponent);
-    };
-
-    const escapeKeyDownHandler = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        replaceFormToLine();
-        document.removeEventListener('keydown', escapeKeyDownHandler);
-      }
-    };
-
-    pointComponent.setEditClickHandler(() => {
-      replaceLineToForm();
-      document.addEventListener('keydown', escapeKeyDownHandler);
+  #renderPointsList = () => {
+    this.#boardPoints.forEach((point) => {
+      this.#renderPoint(point);
     });
+  };
 
-    pointEditComponent.setFormSubmitHandler(() => {
-      replaceFormToLine();
-      document.removeEventListener('keydown', escapeKeyDownHandler);
-    });
+  #clearPointsList = () => {
+    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointsPresenters.clear();
+  };
 
-    render(pointComponent, this.#boardListComponent.element);
+  #renderBoard = () => {
+    render(this.#boardListComponent, this.#boardContainer);
+
+    if (this.#boardPoints.length === 0) {
+      this.#renderNoPoints('Past');
+      return;
+    }
+
+    this.#renderTripInfo();
+    this.#renderSort();
+
+    this.#renderPointsList();
   };
 
   init = () => {
@@ -65,21 +88,5 @@ export default class BoardPresenter {
     this.#offers = this.#pointsModel.offers;
 
     this.#renderBoard();
-  };
-
-  #renderBoard = () => {
-    render(this.#boardListComponent, this.#boardContainer);
-
-    if (this.#boardPoints.length === 0) {
-      render(new ListEmptyView('Past'), this.#boardListComponent.element);
-      return;
-    }
-
-    render(new TripInfoView(), siteTripHeaderElement, RenderPosition.AFTERBEGIN);
-    render(new SortView(), this.#boardContainer, RenderPosition.AFTERBEGIN);
-
-    this.#boardPoints.forEach((point) => {
-      this.#renderPoint(point);
-    });
   };
 }
