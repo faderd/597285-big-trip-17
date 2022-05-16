@@ -27,6 +27,7 @@ export default class PointPresenter {
   #replaceLineToForm = () => {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escapeKeyDownHandler);
+    this.#handleChangeMode();
     this.#mode = Mode.EDITING;
   };
 
