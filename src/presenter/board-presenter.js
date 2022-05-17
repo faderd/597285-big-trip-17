@@ -2,7 +2,7 @@ import {
   render,
   RenderPosition,
 } from '../framework/render.js';
-import { updateItem } from '../utils/common.js';
+import { updateItem, } from '../utils/common.js';
 import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
@@ -42,8 +42,11 @@ export default class BoardPresenter {
     render(this.#tripInfoComponent, siteTripHeaderElement, RenderPosition.AFTERBEGIN);
   };
 
+  #handleSortTypeChange = (sortType) => { };
+
   #renderSort = () => {
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderPoint = (point) => {
