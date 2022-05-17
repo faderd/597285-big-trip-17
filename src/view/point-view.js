@@ -5,17 +5,13 @@ import {
   humanizePointDate,
 } from '../utils/point.js';
 
-const createOffersTemplate = (offersIds, type, gettedOffers) => {
-  const currentOffers = gettedOffers.find((obj) => obj.type === type);
+const createOffersTemplate = (offersIds, type, gettedOffers) => offersIds.map((id) => {
+  const offer = gettedOffers.offers.find((obj) => obj.id === id);
 
-  return offersIds.map((id) => {
-    const offer = currentOffers.offers.find((obj) => obj.id === id);
-
-    return `<li class="event__offer">
+  return `<li class="event__offer">
     <span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
     </li>`;
-  }).join('');
-};
+}).join('');
 
 const createPointTemplate = (point, gettedOffers) => {
   const {
@@ -87,8 +83,18 @@ export default class PointView extends AbstractView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteClickHandler);
+  };
+
   #editClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.editClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   };
 }

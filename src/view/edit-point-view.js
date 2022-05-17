@@ -5,13 +5,10 @@ import {
   formatDate,
 } from '../utils/point.js';
 
-const createOffersTemplate = (offersIds, type, gettedOffers) => {
-  const currentOffers = gettedOffers.find((obj) => obj.type === type);
+const createOffersTemplate = (offersIds, gettedOffers) => gettedOffers.offers.map((offer) => {
+  const checked = offersIds.includes(offer.id);
 
-  return currentOffers.offers.map((offer) => {
-    const checked = offersIds.includes(offer.id);
-
-    return `<div class="event__offer-selector">
+  return `<div class="event__offer-selector">
     <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${checked ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-luggage-1">
       <span class="event__offer-title">${offer.title}</span>
@@ -19,8 +16,7 @@ const createOffersTemplate = (offersIds, type, gettedOffers) => {
       <span class="event__offer-price">${offer.price}</span>
     </label>
   </div>`;
-  }).join('');
-};
+}).join('');
 
 const createEditPointTemplate = (point = {}, gettedOffers) => {
   const {
@@ -32,7 +28,7 @@ const createEditPointTemplate = (point = {}, gettedOffers) => {
     type,
   } = point;
 
-  const offersTemplate = createOffersTemplate(offers, type, gettedOffers);
+  const offersTemplate = createOffersTemplate(offers, gettedOffers);
 
   return (
     `<li class="trip-events__item">
@@ -149,7 +145,7 @@ const createEditPointTemplate = (point = {}, gettedOffers) => {
   </li>`);
 };
 
-export default class EditPointView extends AbstractView{
+export default class EditPointView extends AbstractView {
   #point = null;
   #gettedOffers = null;
 
@@ -170,6 +166,6 @@ export default class EditPointView extends AbstractView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this.#point);
   };
 }

@@ -5,6 +5,7 @@ const PhotoRandomRange = {
   MAX: 10,
 };
 
+import { nanoid } from 'nanoid';
 import {
   TYPES,
 } from '../const.js';
@@ -43,7 +44,7 @@ export const generatePoint = () => ({
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T11:21:13.375Z',
   destination: generateDestination(),
-  id: '0',
+  id: nanoid(),
   isFavorite: Boolean(getRandomInteger()),
   offers: generateOffers(),
   type: getRandomType(),
