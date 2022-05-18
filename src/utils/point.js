@@ -26,34 +26,13 @@ const formatDate = (date, formatString) => dayjs(date).format(formatString);
 
 const getCurrentDate = () => dayjs().format('YYYY-MM-DD');
 
-const sortPointPrice = (pointA, pointB) => {
-  const priceA = pointA.basePrice;
-  const priceB = pointB.basePrice;
-
-  if (priceA > priceB) {
-    return -1;
-  }
-
-  if (priceA < priceB) {
-    return 1;
-  }
-
-  return 0;
-};
+const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
 const sortPointTime = (pointA, pointB) => {
   const timeA = dayjs(pointA.dateTo) - dayjs(pointA.dateFrom);
   const timeB = dayjs(pointB.dateTo) - dayjs(pointB.dateFrom);
 
-  if (timeA > timeB) {
-    return -1;
-  }
-
-  if (timeA < timeB) {
-    return 1;
-  }
-
-  return 0;
+  return timeB - timeA;
 };
 
 export {

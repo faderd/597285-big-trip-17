@@ -45,11 +45,6 @@ export default class SortView extends AbstractView {
       return;
     }
 
-    evt.preventDefault();
-
-    //почему-то не работает выделение при клике
-    evt.target.checked = true;
-
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
 }
