@@ -4,7 +4,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 const createSortTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
-    <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="${SortTypes.DAY}" checked>
+    <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="${SortTypes.DEFAULT}" checked>
     <label class="trip-sort__btn" for="sort-day">Day</label>
   </div>
 
@@ -41,11 +41,15 @@ export default class SortView extends AbstractView {
   };
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'input') {
+    if (evt.target.tagName !== 'INPUT') {
       return;
     }
 
     evt.preventDefault();
+
+    //почему-то не работает выделение при клике
+    evt.target.checked = true;
+
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   };
 }

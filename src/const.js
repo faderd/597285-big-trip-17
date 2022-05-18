@@ -13,7 +13,7 @@ const FilterTypes = {
 };
 
 const SortTypes = {
-  DAY: 'day',
+  DEFAULT: 'day',
   TIME: 'time',
   PRICE: 'price',
 };
