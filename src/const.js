@@ -12,8 +12,15 @@ const FilterTypes = {
   FUTURE: 'future',
 };
 
+const SortTypes = {
+  DEFAULT: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
 export {
   TYPES,
   ListEmptyMessages,
   FilterTypes,
+  SortTypes,
 };

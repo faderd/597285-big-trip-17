@@ -4,6 +4,15 @@ const PhotoRandomRange = {
   MIN: 0,
   MAX: 10,
 };
+const BasePriceRange = {
+  MIN: 500,
+  MAX: 10000,
+};
+
+const RandomHourRange = {
+  MIN: 10,
+  MAX: 23,
+};
 
 import { nanoid } from 'nanoid';
 import {
@@ -40,8 +49,8 @@ const generateOffers = () => {
 };
 
 export const generatePoint = () => ({
-  basePrice: 1100,
-  dateFrom: '2019-07-10T22:55:56.845Z',
+  basePrice: getRandomInteger(BasePriceRange.MIN, BasePriceRange.MAX),
+  dateFrom: `2019-07-10T${getRandomInteger(RandomHourRange.MIN, RandomHourRange.MAX)}:55:56.845Z`,
   dateTo: '2019-07-11T11:21:13.375Z',
   destination: generateDestination(),
   id: nanoid(),
