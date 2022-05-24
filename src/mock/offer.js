@@ -10,15 +10,15 @@ export const generateOffers = () => [
     type: 'taxi',
     offers: [{
       id: 1,
-      title: 'ghnsdgsbgdfb',
+      title: 'taxi ghnsdgsbgdfb',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'gfnjdfghddashd',
+      title: 'taxi gfnjdfghddashd',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'hjkgdffsdhsd',
+      title: 'taxi hjkgdffsdhsd',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   },
@@ -26,120 +26,120 @@ export const generateOffers = () => [
     type: 'bus',
     offers: [{
       id: 1,
-      title: 'hjkgfhhsdgsgh',
+      title: 'bus hjkgfhhsdgsgh',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'fhjghshgsdgfsd',
+      title: 'bus fhjghshgsdgfsd',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'fgjhfdjgdfhsdghf',
+      title: 'bus fgjhfdjgdfhsdghf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'train',
     offers: [{
       id: 1,
-      title: 'hgjkgfjdfghsdf',
+      title: 'train hgjkgfjdfghsdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'dfjkghfdfghsdf',
+      title: 'train dfjkghfdfghsdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'dfgjhgfjdfhgdfh',
+      title: 'train dfgjhgfjdfhgdfh',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'ship',
     offers: [{
       id: 1,
-      title: 'dfghfgjgdfhdf',
+      title: 'ship dfghfgjgdfhdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'dfjgfhdfhdf',
+      title: 'ship dfjgfhdfhdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'hkjgfhjfdhdf',
+      title: 'ship hkjgfhjfdhdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'drive',
     offers: [{
       id: 1,
-      title: 'fdghfjghjdhsdf',
+      title: 'drive fdghfjghjdhsdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'fhjgfhdhdfhdf',
+      title: 'drive fhjgfhdhdfhdf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'dfhjgfjdfhf',
+      title: 'drive dfhjgfjdfhf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'flight',
     offers: [{
       id: 1,
-      title: 'hjljkl;uytjythre',
+      title: 'flight hjljkl;uytjythre',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'gfhjtyrrehhfghj',
+      title: 'flight gfhjtyrrehhfghj',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'tyhtyrjyujtjt',
+      title: 'flight tyhtyrjyujtjt',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'check-in',
     offers: [{
       id: 1,
-      title: 'tjkyuttrjgfhjnghf',
+      title: 'check-in tjkyuttrjgfhjnghf',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'tjtyrujtjhgjtry',
+      title: 'check-in tjtyrujtjhgjtry',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'tjhtrjt trjtyr',
+      title: 'check-in tjhtrjt trjtyr',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'sightseeing',
     offers: [{
       id: 1,
-      title: 'tykjtr jtryjtr ty',
+      title: 'sightseeing tykjtr jtryjtr ty',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'tjhtyj tjtyrjtr',
+      title: 'sightseeing tjhtyj tjtyrjtr',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'tktrj tryjtyr jtry',
+      title: 'sightseeing tktrj tryjtyr jtry',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   }, {
     type: 'restaurant',
     offers: [{
       id: 1,
-      title: 'tyj tryj t ty',
+      title: 'restaurant tyj tryj t ty',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 2,
-      title: 'tyj rtyj try',
+      title: 'restaurant tyj rtyj try',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }, {
       id: 3,
-      title: 'tyj  y yu',
+      title: 'restaurant tyj  y yu',
       price: getRandomInteger(OfferPriceRange.MIN, OfferPriceRange.MAX),
     }],
   },

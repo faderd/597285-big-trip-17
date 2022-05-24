@@ -14,7 +14,9 @@ export default class PointPresenter {
   #pointsListContainer = null;
   #point = null;
   #mode = Mode.DEFAULT;
-  #offers = [];
+  #allOffers = [];
+  #currentOffers = [];
+  #destinations = [];
   #handleChangeData = null;
   #handleChangeMode = null;
 
@@ -40,6 +42,7 @@ export default class PointPresenter {
   #escapeKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToLine();
     }
   };
@@ -57,15 +60,17 @@ export default class PointPresenter {
     this.#replaceFormToLine();
   };
 
-  init = (point, offers) => {
+  init = (point, allOffers, destinations) => {
     this.#point = point;
-    this.#offers = offers;
+    this.#allOffers = allOffers;
+    this.#currentOffers = this.#allOffers.find((obj) => obj.type === this.#point.type);
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#pointComponent = new PointView(this.#point, this.#offers);
-    this.#pointEditComponent = new EditPointView(this.#point, this.#offers);
+    this.#pointComponent = new PointView(this.#point, this.#currentOffers);
+    this.#pointEditComponent = new EditPointView(this.#point, this.#allOffers, this.#destinations);
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
@@ -95,6 +100,7 @@ export default class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToLine();
     }
   };
