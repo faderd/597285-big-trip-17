@@ -18,9 +18,23 @@ const SortTypes = {
   PRICE: 'price',
 };
 
+const UpdateTypes = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const UserActions = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
 export {
   TYPES,
   ListEmptyMessages,
   FilterTypes,
   SortTypes,
+  UpdateTypes,
+  UserActions,
 };
