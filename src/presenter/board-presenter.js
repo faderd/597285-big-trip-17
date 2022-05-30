@@ -1,9 +1,10 @@
-import { SortTypes, UpdateTypes, UserActions } from '../const.js';
+import { FilterTypes, SortTypes, UpdateTypes, UserActions } from '../const.js';
 import {
   remove,
   render,
   RenderPosition,
 } from '../framework/render.js';
+import { filters } from '../utils/filter.js';
 import { sortPointPrice, sortPointTime } from '../utils/point.js';
 import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
@@ -16,6 +17,7 @@ const siteTripHeaderElement = document.querySelector('.trip-main');
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #filterModel = null;
   #offers = [];
   #destinations = [];
 
@@ -24,12 +26,16 @@ export default class BoardPresenter {
   #tripInfoComponent = new TripInfoView();
   #pointsPresenters = new Map();
   #currentSortType = SortTypes.DEFAULT;
+  #listEmptyComponent = null;
+  #filterType = FilterTypes.DEFAULT;
 
-  constructor(boardContainer, pointsModel) {
+  constructor(boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -93,8 +99,9 @@ export default class BoardPresenter {
     this.#pointsPresenters.set(point.id, pointPresenter);
   };
 
-  #renderNoPoints = (filterValue) => {
-    render(new ListEmptyView(filterValue), this.#boardListComponent.element);
+  #renderNoPoints = () => {
+    this.#listEmptyComponent = new ListEmptyView(this.#filterType);
+    render(this.#listEmptyComponent, this.#boardListComponent.element);
   };
 
   #renderPoints = (points) => {
@@ -106,6 +113,7 @@ export default class BoardPresenter {
     this.#pointsPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#listEmptyComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortTypes.DEFAULT;
@@ -116,7 +124,7 @@ export default class BoardPresenter {
     render(this.#boardListComponent, this.#boardContainer);
 
     if (this.points.length === 0) {
-      this.#renderNoPoints('Past');
+      this.#renderNoPoints();
       return;
     }
 
@@ -127,14 +135,18 @@ export default class BoardPresenter {
   };
 
   get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filters[this.#filterType](points);
+
     switch (this.#currentSortType) {
       case SortTypes.PRICE:
-        return [...this.#pointsModel.points].sort(sortPointPrice);
+        return filteredPoints.sort(sortPointPrice);
       case SortTypes.TIME:
-        return [...this.#pointsModel.points].sort(sortPointTime);
+        return filteredPoints.sort(sortPointTime);
     }
 
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   init = () => {

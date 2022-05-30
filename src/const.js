@@ -7,6 +7,7 @@ const ListEmptyMessages = {
 };
 
 const FilterTypes = {
+  DEFAULT: 'everything',
   EVERYTHING: 'everything',
   PAST: 'past',
   FUTURE: 'future',
