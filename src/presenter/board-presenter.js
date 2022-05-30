@@ -10,6 +10,7 @@ import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
+import addPointPresenter from './add-point-presenter.js';
 import PointPresenter from './point-presenter.js';
 
 const siteTripHeaderElement = document.querySelector('.trip-main');
@@ -28,11 +29,14 @@ export default class BoardPresenter {
   #currentSortType = SortTypes.DEFAULT;
   #listEmptyComponent = null;
   #filterType = FilterTypes.DEFAULT;
+  #addPointPresenter = null;
 
   constructor(boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+
+    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element ,this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -69,6 +73,7 @@ export default class BoardPresenter {
   };
 
   #handleModeChange = () => {
+    this.#addPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -109,6 +114,7 @@ export default class BoardPresenter {
   };
 
   #clearBoard = ({ resetSortType = false } = {}) => {
+    this.#addPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.destroy());
     this.#pointsPresenters.clear();
 
@@ -154,5 +160,11 @@ export default class BoardPresenter {
     this.#destinations = this.#pointsModel.destinations;
 
     this.#renderBoard();
+  };
+
+  createPoint = (callback) => {
+    this.#currentSortType = SortTypes.DEFAULT;
+    this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
+    this.#addPointPresenter.init(callback, this.#offers, this.#destinations);
   };
 }
