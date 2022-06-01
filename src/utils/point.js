@@ -26,6 +26,8 @@ const formatDate = (date, formatString) => dayjs(date).format(formatString);
 
 const getCurrentDate = () => dayjs().format('YYYY-MM-DD');
 
+const sortPointDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
+
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
 const sortPointTime = (pointA, pointB) => {
@@ -43,6 +45,7 @@ export {
   humanizePointDate,
   formatDate,
   getCurrentDate,
+  sortPointDay,
   sortPointPrice,
   sortPointTime,
   isDatesEqual,
