@@ -19,11 +19,8 @@ const getRandomUniqueArray = (array) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-
 export {
   getRandomInteger,
   getRandomUniqueArray,
   isEscapeKey,
-  updateItem,
 };

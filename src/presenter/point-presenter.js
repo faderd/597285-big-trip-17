@@ -2,6 +2,8 @@ import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { isEscapeKey } from '../utils/common.js';
 import { remove, render, replace, } from '../framework/render.js';
+import { UpdateTypes, UserActions, } from '../const.js';
+import { isDatesEqual } from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -48,16 +50,27 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleChangeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleChangeData(UserActions.UPDATE_POINT, UpdateTypes.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
   };
 
   #handleEditClick = () => {
     this.#replaceLineToForm();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleChangeData(point);
+  #handleFormSubmit = (update) => {
+    // Проверяем, поменялись ли в задаче данные, попадающие под фильтрацию или сортировку,
+    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
+    const isMinorUpdate = !(this.#point.basePrice === update.basePrice) || !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
+
+    this.#handleChangeData(
+      UserActions.UPDATE_POINT,
+      isMinorUpdate ? UpdateTypes.MINOR : UpdateTypes.PATCH,
+      update);
     this.#replaceFormToLine();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleChangeData(UserActions.DELETE_POINT, UpdateTypes.MINOR, point);
   };
 
   init = (point, allOffers, destinations) => {
@@ -75,6 +88,7 @@ export default class PointPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointsListContainer);

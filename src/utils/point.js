@@ -35,6 +35,8 @@ const sortPointTime = (pointA, pointB) => {
   return timeB - timeA;
 };
 
+const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB);
+
 export {
   getTimeFromDate,
   getTimeDifference,
@@ -43,4 +45,5 @@ export {
   getCurrentDate,
   sortPointPrice,
   sortPointTime,
+  isDatesEqual,
 };
