@@ -2,22 +2,27 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
+const Milliseconds = {
+  HOUR: 3600000,
+  DAY: 86400000,
+};
+
 const getTimeFromDate = (date) => dayjs(date).format('HH:mm');
 
 const getTimeDifference = (dateFrom, dateTo) => {
   const date1 = dayjs(dateFrom);
   const date2 = dayjs(dateTo);
-  const diffTime = dayjs.duration(date2.diff(date1));
+  const diffTime = date2.diff(date1);
 
-  if (diffTime.hours() < 1) {
-    return diffTime.format('mm[M]');
+  if (diffTime < Milliseconds.HOUR) {
+    return dayjs.duration(diffTime).format('mm[M]');
   }
 
-  if (diffTime.days() < 1) {
-    return diffTime.format('HH[H] mm[M]');
+  if (diffTime < Milliseconds.DAY) {
+    return dayjs.duration(diffTime).format('HH[H] mm[M]');
   }
 
-  return diffTime.format('DD[D] HH[H] mm[M]');
+  return dayjs.duration(diffTime).format('DD[D] HH[H] mm[M]');
 };
 
 const humanizePointDate = (date) => dayjs(date).format('MMM DD');
@@ -25,6 +30,8 @@ const humanizePointDate = (date) => dayjs(date).format('MMM DD');
 const formatDate = (date, formatString) => dayjs(date).format(formatString);
 
 const getCurrentDate = () => dayjs().format('YYYY-MM-DD');
+
+const sortPointDay = (pointA, pointB) => dayjs(pointA.dateFrom) - dayjs(pointB.dateFrom);
 
 const sortPointPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 
@@ -43,6 +50,7 @@ export {
   humanizePointDate,
   formatDate,
   getCurrentDate,
+  sortPointDay,
   sortPointPrice,
   sortPointTime,
   isDatesEqual,

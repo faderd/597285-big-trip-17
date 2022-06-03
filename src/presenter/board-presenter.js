@@ -5,7 +5,7 @@ import {
   RenderPosition,
 } from '../framework/render.js';
 import { filters } from '../utils/filter.js';
-import { sortPointPrice, sortPointTime } from '../utils/point.js';
+import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point.js';
 import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
@@ -146,6 +146,8 @@ export default class BoardPresenter {
     const filteredPoints = filters[this.#filterType](points);
 
     switch (this.#currentSortType) {
+      case SortTypes.DEFAULT:
+        return filteredPoints.sort(sortPointDay);
       case SortTypes.PRICE:
         return filteredPoints.sort(sortPointPrice);
       case SortTypes.TIME:
