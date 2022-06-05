@@ -8,6 +8,7 @@ import { filters } from '../utils/filter.js';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point.js';
 import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
+import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import addPointPresenter from './add-point-presenter.js';
@@ -19,17 +20,18 @@ export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
   #filterModel = null;
-  #offers = [];
   #destinations = [];
 
   #boardListComponent = new BoardView();
   #sortComponent = null;
   #tripInfoComponent = new TripInfoView();
+  #loadingComponent = new LoadingView();
   #pointsPresenters = new Map();
   #currentSortType = SortTypes.DEFAULT;
   #listEmptyComponent = null;
   #filterType = FilterTypes.DEFAULT;
   #addPointPresenter = null;
+  #isLoading = true;
 
   constructor(boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
@@ -59,7 +61,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateTypes.PATCH:
-        this.#pointsPresenters.get(data.id).init(data, this.#offers, this.#destinations);
+        this.#pointsPresenters.get(data.id).init(data, this.offers, this.#destinations);
         break;
       case UpdateTypes.MINOR:
         this.#clearBoard();
@@ -67,6 +69,11 @@ export default class BoardPresenter {
         break;
       case UpdateTypes.MAJOR:
         this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
+        break;
+      case UpdateTypes.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
         this.#renderBoard();
         break;
     }
@@ -79,6 +86,10 @@ export default class BoardPresenter {
 
   #renderTripInfo = () => {
     render(this.#tripInfoComponent, siteTripHeaderElement, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#boardListComponent.element, RenderPosition.AFTERBEGIN);
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -98,9 +109,9 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #renderPoint = (point) => {
+  #renderPoint = (point, offers) => {
     const pointPresenter = new PointPresenter(this.#boardListComponent.element, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point, this.#offers, this.#destinations);
+    pointPresenter.init(point, offers, this.#destinations);
     this.#pointsPresenters.set(point.id, pointPresenter);
   };
 
@@ -109,8 +120,8 @@ export default class BoardPresenter {
     render(this.#listEmptyComponent, this.#boardListComponent.element);
   };
 
-  #renderPoints = (points) => {
-    points.forEach((point) => this.#renderPoint(point));
+  #renderPoints = (points, offers) => {
+    points.forEach((point) => this.#renderPoint(point, offers));
   };
 
   #clearBoard = ({ resetSortType = false } = {}) => {
@@ -120,6 +131,7 @@ export default class BoardPresenter {
 
     remove(this.#sortComponent);
     remove(this.#listEmptyComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortTypes.DEFAULT;
@@ -129,6 +141,11 @@ export default class BoardPresenter {
   #renderBoard = () => {
     render(this.#boardListComponent, this.#boardContainer);
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       this.#renderNoPoints();
       return;
@@ -137,7 +154,7 @@ export default class BoardPresenter {
     this.#renderTripInfo();
     this.#renderSort();
 
-    this.#renderPoints(this.points);
+    this.#renderPoints(this.points, this.offers);
   };
 
   get points() {
@@ -157,8 +174,11 @@ export default class BoardPresenter {
     return filteredPoints;
   }
 
+  get offers() {
+    return this.#pointsModel.offers;
+  }
+
   init = () => {
-    this.#offers = this.#pointsModel.offers;
     this.#destinations = this.#pointsModel.destinations;
 
     this.#renderBoard();
@@ -167,6 +187,6 @@ export default class BoardPresenter {
   createPoint = (callback) => {
     this.#currentSortType = SortTypes.DEFAULT;
     this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
-    this.#addPointPresenter.init(callback, this.#offers, this.#destinations);
+    this.#addPointPresenter.init(callback, this.offers, this.#destinations);
   };
 }
