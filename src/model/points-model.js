@@ -1,12 +1,17 @@
+import { UpdateTypes } from '../const.js';
 import Observable from '../framework/observable.js';
 import { generateDestinations } from '../mock/destination.js';
-import { generateOffers, } from '../mock/offer.js';
-import { generatePoint, } from '../mock/point.js';
 
 export default class PointsModel extends Observable {
-  #points = Array.from({ length: 10 }, generatePoint);
-  #offers = generateOffers();
+  #pointsApiService = null;
+  #points = [];
+  #offers = [];
   #destinations = generateDestinations();
+
+  constructor(pointsApiService) {
+    super();
+    this.#pointsApiService = pointsApiService;
+  }
 
   get points() {
     return this.#points;
@@ -20,10 +25,30 @@ export default class PointsModel extends Observable {
     return this.#destinations;
   }
 
-  updatePoint = (updateType, update) => {
-    this.#points = this.#points.map((point) => point.id === update.id ? update : point);
+  init = async () => {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+      this.#offers = await this.#pointsApiService.offers;
+    } catch (err) {
+      this.#points = [];
+      this.#offers = [];
+    }
 
-    this._notify(updateType, update);
+    this._notify(UpdateTypes.INIT);
+  };
+
+  updatePoint = async (updateType, update) => {
+    try {
+      const response = await this.#pointsApiService.updatePoint(update);
+      const updatedPoint = this.#adaptToClient(response);
+
+      this.#points = this.#points.map((point) => point.id === updatedPoint.id ? updatedPoint : point);
+
+      this._notify(updateType, update);
+    } catch (err) {
+      throw new Error('Can\'t update point');
+    }
   };
 
   addPoint = (updateType, update) => {
@@ -39,5 +64,22 @@ export default class PointsModel extends Observable {
     this.#points = this.#points.filter((point) => point.id !== update.id);
 
     this._notify(updateType);
+  };
+
+  #adaptToClient = (point) => {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point.base_price,
+      dateFrom: point.date_from,
+      dateTo: point.date_to,
+      isFavorite: point.is_favorite,
+    };
+
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.is_favorite;
+
+    return adaptedPoint;
   };
 }
