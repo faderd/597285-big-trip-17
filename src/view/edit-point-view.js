@@ -220,6 +220,11 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
   reset = (point) => {
     this.updateElement(
       EditPointView.parsePointToState(point),
@@ -231,6 +236,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCloseClickHandler(this._callback.closeClick);
   };
 
   #formSubmitHandler = (evt) => {
@@ -241,6 +247,11 @@ export default class EditPointView extends AbstractStatefulView {
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(EditPointView.parseStateToPoint(this._state));
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
   };
 
   #typeChangeHandler = (evt) => {
