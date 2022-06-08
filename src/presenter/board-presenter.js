@@ -45,7 +45,7 @@ export default class BoardPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
-    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element ,this.#handleViewAction);
+    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -87,7 +87,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateTypes.PATCH:
-        this.#pointsPresenters.get(data.id).init(data, this.offers, this.#destinations);
+        this.#pointsPresenters.get(data.id).init(data, this.offers, this.destinations);
         break;
       case UpdateTypes.MINOR:
         this.#clearBoard();
@@ -135,9 +135,9 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #renderPoint = (point, offers) => {
+  #renderPoint = (point, offers, destinations) => {
     const pointPresenter = new PointPresenter(this.#boardListComponent.element, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point, offers, this.#destinations);
+    pointPresenter.init(point, offers, destinations);
     this.#pointsPresenters.set(point.id, pointPresenter);
   };
 
@@ -146,8 +146,8 @@ export default class BoardPresenter {
     render(this.#listEmptyComponent, this.#boardListComponent.element);
   };
 
-  #renderPoints = (points, offers) => {
-    points.forEach((point) => this.#renderPoint(point, offers));
+  #renderPoints = (points, offers, destinations) => {
+    points.forEach((point) => this.#renderPoint(point, offers, destinations));
   };
 
   #clearBoard = ({ resetSortType = false } = {}) => {
@@ -180,7 +180,7 @@ export default class BoardPresenter {
     this.#renderTripInfo();
     this.#renderSort();
 
-    this.#renderPoints(this.points, this.offers);
+    this.#renderPoints(this.points, this.offers, this.destinations);
   };
 
   get points() {
@@ -204,15 +204,17 @@ export default class BoardPresenter {
     return this.#pointsModel.offers;
   }
 
-  init = () => {
-    this.#destinations = this.#pointsModel.destinations;
+  get destinations() {
+    return this.#pointsModel.destinations;
+  }
 
+  init = () => {
     this.#renderBoard();
   };
 
   createPoint = (callback) => {
     this.#currentSortType = SortTypes.DEFAULT;
     this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
-    this.#addPointPresenter.init(callback, this.offers, this.#destinations);
+    this.#addPointPresenter.init(callback, this.offers, this.destinations);
   };
 }

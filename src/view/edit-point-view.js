@@ -154,7 +154,7 @@ const createEditPointTemplate = (point, allOffers, destinations) => {
         </button>
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        <section class="event__section  event__section--offers" ${currentOffers.offers.length === 0 ? 'style="display: none"' : ''}>
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
