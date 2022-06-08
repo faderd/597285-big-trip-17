@@ -10,7 +10,6 @@ import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
-import TripInfoView from '../view/trip-info-view.js';
 import addPointPresenter from './add-point-presenter.js';
 import PointPresenter from './point-presenter.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
@@ -20,17 +19,13 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-const siteTripHeaderElement = document.querySelector('.trip-main');
-
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
   #filterModel = null;
-  #destinations = [];
 
   #boardListComponent = new BoardView();
   #sortComponent = null;
-  #tripInfoComponent = new TripInfoView();
   #loadingComponent = new LoadingView();
   #pointsPresenters = new Map();
   #currentSortType = SortTypes.DEFAULT;
@@ -110,10 +105,6 @@ export default class BoardPresenter {
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #renderTripInfo = () => {
-    render(this.#tripInfoComponent, siteTripHeaderElement, RenderPosition.AFTERBEGIN);
-  };
-
   #renderLoading = () => {
     render(this.#loadingComponent, this.#boardListComponent.element, RenderPosition.AFTERBEGIN);
   };
@@ -177,7 +168,6 @@ export default class BoardPresenter {
       return;
     }
 
-    this.#renderTripInfo();
     this.#renderSort();
 
     this.#renderPoints(this.points, this.offers, this.destinations);

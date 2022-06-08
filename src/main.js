@@ -5,6 +5,7 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import newEventButtonView from './view/new-event-button-view.js';
 import { render } from './framework/render.js';
 import PointsApiService from './points-api-service.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
 
 const AUTHORIZATION = 'Basic er883jdzbdw';
 const END_POINT = 'https://17.ecmascript.pages.academy/big-trip';
@@ -19,6 +20,7 @@ const filterModel = new FilterModel();
 const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteFilterElement, filterModel, pointsModel);
 const newEventButtonComponent = new newEventButtonView();
+const tripInfoPresenter = new TripInfoPresenter(pointsModel);
 
 const handleNewEventFormClose = () => {
   newEventButtonComponent.element.disabled = false;
@@ -35,6 +37,7 @@ newEventButtonComponent.element.disabled = true;
 
 filterPresenter.init();
 boardPresenter.init();
+tripInfoPresenter.init();
 
 pointsModel.init(newEventButtonComponent)
   .finally(() => {

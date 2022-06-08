@@ -10,6 +10,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   type: 'taxi',
+  dateFrom: new Date(),
+  dateTo: new Date(),
   offers: [],
   basePrice: 0,
   isFavorite: false,
