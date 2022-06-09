@@ -49,6 +49,11 @@ export default class PointPresenter {
     }
   };
 
+  #handleCloseClick = () => {
+    this.#pointEditComponent.reset(this.#point);
+    this.#replaceFormToLine();
+  };
+
   #handleFavoriteClick = () => {
     this.#handleChangeData(UserActions.UPDATE_POINT, UpdateTypes.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
   };
@@ -88,6 +93,7 @@ export default class PointPresenter {
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#pointEditComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#pointEditComponent.setCloseClickHandler(this.#handleCloseClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointsListContainer);

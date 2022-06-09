@@ -1,12 +1,11 @@
 import { UpdateTypes } from '../const.js';
 import Observable from '../framework/observable.js';
-import { generateDestinations } from '../mock/destination.js';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
   #points = [];
   #offers = [];
-  #destinations = generateDestinations();
+  #destinations = [];
 
   constructor(pointsApiService) {
     super();
@@ -30,9 +29,11 @@ export default class PointsModel extends Observable {
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
       this.#offers = await this.#pointsApiService.offers;
+      this.#destinations = await this.#pointsApiService.destinations;
     } catch (err) {
       this.#points = [];
       this.#offers = [];
+      this.#destinations = [];
     }
 
     this._notify(UpdateTypes.INIT);

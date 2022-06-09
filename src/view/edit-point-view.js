@@ -10,6 +10,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   type: 'taxi',
+  dateFrom: new Date(),
+  dateTo: new Date(),
   offers: [],
   basePrice: 0,
   isFavorite: false,
@@ -154,7 +156,7 @@ const createEditPointTemplate = (point, allOffers, destinations) => {
         </button>
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        <section class="event__section  event__section--offers" ${currentOffers.offers.length === 0 ? 'style="display: none"' : ''}>
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
@@ -218,6 +220,11 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   };
 
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeClickHandler);
+  };
+
   reset = (point) => {
     this.updateElement(
       EditPointView.parsePointToState(point),
@@ -229,6 +236,7 @@ export default class EditPointView extends AbstractStatefulView {
     this.#setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCloseClickHandler(this._callback.closeClick);
   };
 
   #formSubmitHandler = (evt) => {
@@ -239,6 +247,11 @@ export default class EditPointView extends AbstractStatefulView {
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(EditPointView.parseStateToPoint(this._state));
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
   };
 
   #typeChangeHandler = (evt) => {

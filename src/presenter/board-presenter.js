@@ -10,7 +10,6 @@ import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
-import TripInfoView from '../view/trip-info-view.js';
 import addPointPresenter from './add-point-presenter.js';
 import PointPresenter from './point-presenter.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
@@ -20,17 +19,13 @@ const TimeLimit = {
   UPPER_LIMIT: 1000,
 };
 
-const siteTripHeaderElement = document.querySelector('.trip-main');
-
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
   #filterModel = null;
-  #destinations = [];
 
   #boardListComponent = new BoardView();
   #sortComponent = null;
-  #tripInfoComponent = new TripInfoView();
   #loadingComponent = new LoadingView();
   #pointsPresenters = new Map();
   #currentSortType = SortTypes.DEFAULT;
@@ -45,7 +40,7 @@ export default class BoardPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
-    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element ,this.#handleViewAction);
+    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -87,7 +82,7 @@ export default class BoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateTypes.PATCH:
-        this.#pointsPresenters.get(data.id).init(data, this.offers, this.#destinations);
+        this.#pointsPresenters.get(data.id).init(data, this.offers, this.destinations);
         break;
       case UpdateTypes.MINOR:
         this.#clearBoard();
@@ -108,10 +103,6 @@ export default class BoardPresenter {
   #handleModeChange = () => {
     this.#addPointPresenter.destroy();
     this.#pointsPresenters.forEach((presenter) => presenter.resetView());
-  };
-
-  #renderTripInfo = () => {
-    render(this.#tripInfoComponent, siteTripHeaderElement, RenderPosition.AFTERBEGIN);
   };
 
   #renderLoading = () => {
@@ -135,9 +126,9 @@ export default class BoardPresenter {
     render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #renderPoint = (point, offers) => {
+  #renderPoint = (point, offers, destinations) => {
     const pointPresenter = new PointPresenter(this.#boardListComponent.element, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point, offers, this.#destinations);
+    pointPresenter.init(point, offers, destinations);
     this.#pointsPresenters.set(point.id, pointPresenter);
   };
 
@@ -146,8 +137,8 @@ export default class BoardPresenter {
     render(this.#listEmptyComponent, this.#boardListComponent.element);
   };
 
-  #renderPoints = (points, offers) => {
-    points.forEach((point) => this.#renderPoint(point, offers));
+  #renderPoints = (points, offers, destinations) => {
+    points.forEach((point) => this.#renderPoint(point, offers, destinations));
   };
 
   #clearBoard = ({ resetSortType = false } = {}) => {
@@ -177,10 +168,9 @@ export default class BoardPresenter {
       return;
     }
 
-    this.#renderTripInfo();
     this.#renderSort();
 
-    this.#renderPoints(this.points, this.offers);
+    this.#renderPoints(this.points, this.offers, this.destinations);
   };
 
   get points() {
@@ -204,15 +194,17 @@ export default class BoardPresenter {
     return this.#pointsModel.offers;
   }
 
-  init = () => {
-    this.#destinations = this.#pointsModel.destinations;
+  get destinations() {
+    return this.#pointsModel.destinations;
+  }
 
+  init = () => {
     this.#renderBoard();
   };
 
   createPoint = (callback) => {
     this.#currentSortType = SortTypes.DEFAULT;
     this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
-    this.#addPointPresenter.init(callback, this.offers, this.#destinations);
+    this.#addPointPresenter.init(callback, this.offers, this.destinations);
   };
 }
