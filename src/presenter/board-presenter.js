@@ -206,5 +206,6 @@ export default class BoardPresenter {
     this.#currentSortType = SortTypes.DEFAULT;
     this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
     this.#addPointPresenter.init(callback, this.offers, this.destinations);
+    this.#addPointPresenter.setAddPoint();
   };
 }

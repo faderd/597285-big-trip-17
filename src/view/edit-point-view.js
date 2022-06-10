@@ -37,6 +37,20 @@ const createPhotosTemplate = (pictures) => `
     </div>
 `;
 
+const createResetButtonTemplate = (isAddPoint, isDeleting, isDisabled) => {
+  if (isAddPoint) {
+    return `
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
+      Cancel
+    </button>`;
+  }
+
+  return `
+    <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
+      ${isDeleting ? 'Deleting...' : 'Delete'}
+    </button>`;
+};
+
 const getDestinationsTemplate = (destinations) => destinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
 
 const createEditPointTemplate = (point, allOffers, destinations) => {
@@ -50,6 +64,7 @@ const createEditPointTemplate = (point, allOffers, destinations) => {
     isDeleting,
     isDisabled,
     isSaving,
+    isAddPoint,
   } = point;
 
   const currentOffers = allOffers.find((obj) => obj.type === type);
@@ -148,9 +163,7 @@ const createEditPointTemplate = (point, allOffers, destinations) => {
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>
           ${isSaving ? 'Saving...' : 'Save'}
         </button>
-        <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
-          ${isDeleting ? 'Deleting...' : 'Delete'}
-        </button>
+        ${createResetButtonTemplate(isAddPoint, isDeleting, isDisabled)}
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -268,7 +281,6 @@ export default class EditPointView extends AbstractStatefulView {
 
     this.updateElement({
       destination: this.#destinations.find((obj) => obj.name === evt.target.value),
-      offers: [],
     });
   };
 
@@ -342,6 +354,7 @@ export default class EditPointView extends AbstractStatefulView {
     isDisabled: false,
     isSaving: false,
     isDeleting: false,
+    isAddPoint: false,
   });
 
   static parseStateToPoint = (state) => {
@@ -350,6 +363,7 @@ export default class EditPointView extends AbstractStatefulView {
     delete point.isDisabled;
     delete point.isSaving;
     delete point.isDeleting;
+    delete point.isAddPoint;
 
     return point;
   };

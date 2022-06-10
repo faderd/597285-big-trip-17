@@ -24,6 +24,7 @@ export default class addPointPresenter {
     this.#editPointComponent = new EditPointView(undefined, allOffers, destinations);
     this.#editPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#editPointComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#editPointComponent.setCloseClickHandler(this.#handleCloseClick);
 
     render(this.#editPointComponent, this.#pointsListContainer, RenderPosition.AFTERBEGIN);
 
@@ -56,10 +57,17 @@ export default class addPointPresenter {
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
+        isAddPoint: false,
       });
     };
 
     this.#editPointComponent.shake(resetFormState);
+  };
+
+  setAddPoint = () => {
+    this.#editPointComponent.updateElement({
+      isAddPoint: true,
+    });
   };
 
   #handleFormSubmit = (point) => {
@@ -79,5 +87,9 @@ export default class addPointPresenter {
       evt.preventDefault();
       this.destroy();
     }
+  };
+
+  #handleCloseClick = () => {
+    this.destroy();
   };
 }
