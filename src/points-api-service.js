@@ -1,4 +1,4 @@
-import ApiSrvice from './framework/api-service.js';
+import ApiService from './framework/api-service.js';
 
 const Method = {
   GET: 'GET',
@@ -7,20 +7,20 @@ const Method = {
   DELETE: 'DELETE',
 };
 
-export default class PointsApiService extends ApiSrvice {
+export default class PointsApiService extends ApiService {
   get points() {
     return this._load({ url: 'points' })
-      .then(ApiSrvice.parseResponse);
+      .then(ApiService.parseResponse);
   }
 
   get offers() {
     return this._load({ url: 'offers' })
-      .then(ApiSrvice.parseResponse);
+      .then(ApiService.parseResponse);
   }
 
   get destinations() {
     return this._load({ url: 'destinations' })
-      .then(ApiSrvice.parseResponse);
+      .then(ApiService.parseResponse);
   }
 
   addPoint = async (point) => {
@@ -31,7 +31,7 @@ export default class PointsApiService extends ApiSrvice {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
-    const parsedResponse = await ApiSrvice.parseResponse(response);
+    const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   };
 
@@ -52,7 +52,7 @@ export default class PointsApiService extends ApiSrvice {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
-    const parsedResponse = await ApiSrvice.parseResponse(response);
+    const parsedResponse = await ApiService.parseResponse(response);
     return parsedResponse;
   };
 

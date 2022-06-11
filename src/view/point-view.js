@@ -5,15 +5,15 @@ import {
   humanizePointDate,
 } from '../utils/point.js';
 
-const createOffersTemplate = (offersIds, type, gettedOffers) => offersIds.map((id) => {
-  const offer = gettedOffers.offers.find((obj) => obj.id === id);
+const createOffersTemplate = (offersIds, receivedOffers) => offersIds.map((id) => {
+  const currentOffer = receivedOffers.offers.find((offer) => offer.id === id);
 
   return `<li class="event__offer">
-    <span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+    <span class="event__offer-title">${currentOffer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${currentOffer.price}</span>
     </li>`;
 }).join('');
 
-const createPointTemplate = (point, gettedOffers) => {
+const createPointTemplate = (point, receivedOffers) => {
   const {
     basePrice,
     dateFrom,
@@ -26,7 +26,7 @@ const createPointTemplate = (point, gettedOffers) => {
 
   const favoriteClassName = isFavorite ? 'event__favorite-btn--active' : 'event__favorite-btn--passive';
 
-  const offersTemplate = createOffersTemplate(offers, type, gettedOffers);
+  const offersTemplate = createOffersTemplate(offers, receivedOffers);
 
   return (
     `<li class="trip-events__item">
@@ -66,16 +66,16 @@ const createPointTemplate = (point, gettedOffers) => {
 
 export default class PointView extends AbstractView {
   #point = null;
-  #gettedOffers = null;
+  #receivedOffers = null;
 
-  constructor(point, gettedOffers) {
+  constructor(point, receivedOffers) {
     super();
     this.#point = point;
-    this.#gettedOffers = gettedOffers;
+    this.#receivedOffers = receivedOffers;
   }
 
   get template() {
-    return createPointTemplate(this.#point, this.#gettedOffers);
+    return createPointTemplate(this.#point, this.#receivedOffers);
   }
 
   setEditClickHandler = (callback) => {

@@ -2,7 +2,7 @@ import PointsModel from './model/points-model.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
-import newEventButtonView from './view/new-event-button-view.js';
+import NewEventButtonView from './view/new-event-button-view.js';
 import { render } from './framework/render.js';
 import PointsApiService from './points-api-service.js';
 import TripInfoPresenter from './presenter/trip-info-presenter.js';
@@ -19,7 +19,7 @@ const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATIO
 const filterModel = new FilterModel();
 const boardPresenter = new BoardPresenter(siteTripEventsElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteFilterElement, filterModel, pointsModel);
-const newEventButtonComponent = new newEventButtonView();
+const newEventButtonComponent = new NewEventButtonView();
 const tripInfoPresenter = new TripInfoPresenter(pointsModel);
 
 const handleNewEventFormClose = () => {
