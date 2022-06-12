@@ -1,6 +1,6 @@
-import { FilterTypes } from '../const.js';
+import { FilterType } from '../const.js';
 import { render, RenderPosition, remove, replace } from '../framework/render.js';
-import { filters } from '../utils/filter.js';
+import { filter } from '../utils/filter.js';
 import { formatDate } from '../utils/point.js';
 import TripInfoView from '../view/trip-info-view.js';
 
@@ -24,7 +24,7 @@ export default class TripInfoPresenter {
       return;
     }
 
-    this.#sortedPoints = filters[FilterTypes.DEFAULT](this.#pointsModel.points);
+    this.#sortedPoints = filter[FilterType.DEFAULT](this.#pointsModel.points);
     const dateFrom = this.#getDateFrom(this.#sortedPoints[0]);
     const dateTo = this.#getDateTo(this.#sortedPoints[this.#sortedPoints.length - 1]);
     const route = this.#getRoute(this.#sortedPoints);

@@ -1,6 +1,6 @@
-import { FilterTypes, UpdateTypes } from '../const.js';
+import { FilterType, UpdateType } from '../const.js';
 import { remove, render, replace } from '../framework/render.js';
-import { filters } from '../utils/filter.js';
+import { filter } from '../utils/filter.js';
 import FilterView from '../view/filter-view.js';
 
 export default class FilterPresenter {
@@ -24,19 +24,19 @@ export default class FilterPresenter {
 
     return [
       {
-        type: FilterTypes.EVERYTHING,
+        type: FilterType.EVERYTHING,
         name: 'everything',
-        count: filters[FilterTypes.EVERYTHING](points).length,
+        count: filter[FilterType.EVERYTHING](points).length,
       },
       {
-        type: FilterTypes.PAST,
+        type: FilterType.PAST,
         name: 'past',
-        count: filters[FilterTypes.PAST](points).length,
+        count: filter[FilterType.PAST](points).length,
       },
       {
-        type: FilterTypes.FUTURE,
+        type: FilterType.FUTURE,
         name: 'future',
-        count: filters[FilterTypes.FUTURE](points).length,
+        count: filter[FilterType.FUTURE](points).length,
       },
     ];
   }
@@ -66,6 +66,6 @@ export default class FilterPresenter {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateTypes.MAJOR, filterType);
+    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
   };
 }

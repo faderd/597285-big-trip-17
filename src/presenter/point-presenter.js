@@ -2,7 +2,7 @@ import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import { isEscapeKey } from '../utils/common.js';
 import { remove, render, replace, } from '../framework/render.js';
-import { UpdateTypes, UserActions, } from '../const.js';
+import { UpdateType, UserAction, } from '../const.js';
 import { isDatesEqual } from '../utils/point.js';
 
 const Mode = {
@@ -55,7 +55,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleChangeData(UserActions.UPDATE_POINT, UpdateTypes.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
+    this.#handleChangeData(UserAction.UPDATE_POINT, UpdateType.MINOR, { ...this.#point, isFavorite: !this.#point.isFavorite });
   };
 
   #handleEditClick = () => {
@@ -68,13 +68,15 @@ export default class PointPresenter {
     const isMinorUpdate = !(this.#point.basePrice === update.basePrice) || !isDatesEqual(this.#point.dateFrom, update.dateFrom) || !isDatesEqual(this.#point.dateTo, update.dateTo);
 
     this.#handleChangeData(
-      UserActions.UPDATE_POINT,
-      isMinorUpdate ? UpdateTypes.MINOR : UpdateTypes.PATCH,
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update);
+
+    document.removeEventListener('keydown', this.#escapeKeyDownHandler);
   };
 
   #handleDeleteClick = (point) => {
-    this.#handleChangeData(UserActions.DELETE_POINT, UpdateTypes.MINOR, point);
+    this.#handleChangeData(UserAction.DELETE_POINT, UpdateType.MINOR, point);
   };
 
   init = (point, allOffers, destinations) => {

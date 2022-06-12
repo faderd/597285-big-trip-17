@@ -1,8 +1,8 @@
-import { ListEmptyMessages, } from '../const.js';
+import {ListEmptyMessage, } from '../const.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const createListEmptyTemplate = (filterValue) => {
-  const message = ListEmptyMessages[filterValue.toUpperCase()];
+  const message = ListEmptyMessage[filterValue.toUpperCase()];
   return (
     `<p class="trip-events__msg">${message}</p>`
   );

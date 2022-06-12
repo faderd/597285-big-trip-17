@@ -1,16 +1,16 @@
-import { FilterTypes, SortTypes, UpdateTypes, UserActions } from '../const.js';
+import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
 import {
   remove,
   render,
   RenderPosition,
 } from '../framework/render.js';
-import { filters } from '../utils/filter.js';
+import { filter } from '../utils/filter.js';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point.js';
 import BoardView from '../view/board-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
-import addPointPresenter from './add-point-presenter.js';
+import AddPointPresenter from './add-point-presenter.js';
 import PointPresenter from './point-presenter.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
@@ -28,9 +28,9 @@ export default class BoardPresenter {
   #sortComponent = null;
   #loadingComponent = new LoadingView();
   #pointsPresenters = new Map();
-  #currentSortType = SortTypes.DEFAULT;
+  #currentSortType = SortType.DEFAULT;
   #listEmptyComponent = null;
-  #filterType = FilterTypes.DEFAULT;
+  #filterType = FilterType.DEFAULT;
   #addPointPresenter = null;
   #isLoading = true;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
@@ -40,7 +40,7 @@ export default class BoardPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
-    this.#addPointPresenter = new addPointPresenter(this.#boardListComponent.element, this.#handleViewAction);
+    this.#addPointPresenter = new AddPointPresenter(this.#boardListComponent.element, this.#handleViewAction);
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -50,7 +50,7 @@ export default class BoardPresenter {
     this.#uiBlocker.block();
 
     switch (actionType) {
-      case UserActions.UPDATE_POINT:
+      case UserAction.UPDATE_POINT:
         this.#pointsPresenters.get(update.id).setSaving();
         try {
           await this.#pointsModel.updatePoint(updateType, update);
@@ -58,7 +58,7 @@ export default class BoardPresenter {
           this.#pointsPresenters.get(update.id).setAborting();
         }
         break;
-      case UserActions.ADD_POINT:
+      case UserAction.ADD_POINT:
         this.#addPointPresenter.setSaving();
         try {
           await this.#pointsModel.addPoint(updateType, update);
@@ -66,7 +66,7 @@ export default class BoardPresenter {
           this.#addPointPresenter.setAborting();
         }
         break;
-      case UserActions.DELETE_POINT:
+      case UserAction.DELETE_POINT:
         this.#pointsPresenters.get(update.id).setDeleting();
         try {
           await this.#pointsModel.deletePoint(updateType, update);
@@ -81,18 +81,18 @@ export default class BoardPresenter {
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
-      case UpdateTypes.PATCH:
+      case UpdateType.PATCH:
         this.#pointsPresenters.get(data.id).init(data, this.offers, this.destinations);
         break;
-      case UpdateTypes.MINOR:
+      case UpdateType.MINOR:
         this.#clearBoard();
         this.#renderBoard();
         break;
-      case UpdateTypes.MAJOR:
+      case UpdateType.MAJOR:
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
-      case UpdateTypes.INIT:
+      case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderBoard();
@@ -151,7 +151,7 @@ export default class BoardPresenter {
     remove(this.#loadingComponent);
 
     if (resetSortType) {
-      this.#currentSortType = SortTypes.DEFAULT;
+      this.#currentSortType = SortType.DEFAULT;
     }
   };
 
@@ -176,14 +176,14 @@ export default class BoardPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filters[this.#filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
-      case SortTypes.DEFAULT:
+      case SortType.DEFAULT:
         return filteredPoints.sort(sortPointDay);
-      case SortTypes.PRICE:
+      case SortType.PRICE:
         return filteredPoints.sort(sortPointPrice);
-      case SortTypes.TIME:
+      case SortType.TIME:
         return filteredPoints.sort(sortPointTime);
     }
 
@@ -203,8 +203,8 @@ export default class BoardPresenter {
   };
 
   createPoint = (callback) => {
-    this.#currentSortType = SortTypes.DEFAULT;
-    this.#filterModel.setFilter(UpdateTypes.MAJOR, FilterTypes.DEFAULT);
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.DEFAULT);
     this.#addPointPresenter.init(callback, this.offers, this.destinations);
     this.#addPointPresenter.setAddPoint();
   };

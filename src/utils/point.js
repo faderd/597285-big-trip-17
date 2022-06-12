@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-const Milliseconds = {
+const Millisecond = {
   HOUR: 3600000,
   DAY: 86400000,
 };
@@ -14,11 +14,11 @@ const getTimeDifference = (dateFrom, dateTo) => {
   const date2 = dayjs(dateTo);
   const diffTime = date2.diff(date1);
 
-  if (diffTime < Milliseconds.HOUR) {
+  if (diffTime < Millisecond.HOUR) {
     return dayjs.duration(diffTime).format('mm[M]');
   }
 
-  if (diffTime < Milliseconds.DAY) {
+  if (diffTime < Millisecond.DAY) {
     return dayjs.duration(diffTime).format('HH[H] mm[M]');
   }
 

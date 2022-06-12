@@ -1,9 +1,9 @@
-import { UpdateTypes, UserActions } from '../const';
+import { UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common';
 import EditPointView from '../view/edit-point-view.js';
 
-export default class addPointPresenter {
+export default class AddPointPresenter {
   #pointsListContainer = null;
   #changeData = null;
   #editPointComponent = null;
@@ -72,8 +72,8 @@ export default class addPointPresenter {
 
   #handleFormSubmit = (point) => {
     this.#changeData(
-      UserActions.ADD_POINT,
-      UpdateTypes.MINOR,
+      UserAction.ADD_POINT,
+      UpdateType.MINOR,
       point,
     );
   };

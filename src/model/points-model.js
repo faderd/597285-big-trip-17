@@ -1,4 +1,4 @@
-import { UpdateTypes } from '../const.js';
+import { UpdateType } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
@@ -36,7 +36,7 @@ export default class PointsModel extends Observable {
       this.#destinations = [];
     }
 
-    this._notify(UpdateTypes.INIT);
+    this._notify(UpdateType.INIT);
   };
 
   updatePoint = async (updateType, update) => {
